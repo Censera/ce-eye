@@ -5,7 +5,6 @@
 visitor-join-message: "&eWelcome, &f%player%&e. You are currently untrusted and restricted to Visitor Mode."
 upgrade-message: "&aYou are authenticated and trusted. Full world access granted."
 broadcast-on-upgrade: ""
-visitor-gamemode: SPECTATOR
 upgrade-gamemode: SURVIVAL
 
 two-factor-web-host: "127.0.0.1"

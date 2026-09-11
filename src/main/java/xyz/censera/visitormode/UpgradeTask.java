@@ -34,7 +34,6 @@ final class UpgradeTask {
 
     private void tick() {
         VisitorRegistry registry = plugin.getRegistry();
-        PluginConfig config = plugin.getPluginConfig();
 
         for (UUID uuid : registry.snapshot()) {
             Player player = Bukkit.getPlayer(uuid);
@@ -44,16 +43,23 @@ final class UpgradeTask {
                 continue;
             }
 
-            if (player.isWhitelisted() && plugin.getAuthenticated().contains(uuid)) {
-                upgrade(player, config);
-            }
+            tryUpgrade(player);
         }
     }
 
-    private void upgrade(Player player, PluginConfig config) {
-        plugin.exitVisitor(player);
+    /**
+     * Upgrades player out of Visitor Mode if they're both authenticated and whitelisted.
+     * Called from the periodic tick, and also called directly right after a successful
+     * login or registration so a player who is already whitelisted doesn't sit in
+     * Visitor Mode waiting for the next tick.
+     */
+    void tryUpgrade(Player player) {
+        UUID uuid = player.getUniqueId();
+        if (!plugin.getRegistry().contains(uuid)) return;
+        if (!player.isWhitelisted() || !plugin.getAuthenticated().contains(uuid)) return;
 
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getUpgradeMessage()));
+        PluginConfig config = plugin.getPluginConfig();
+        plugin.exitVisitor(player);
 
         String broadcast = config.getBroadcastOnUpgrade();
         if (!broadcast.isEmpty()) {

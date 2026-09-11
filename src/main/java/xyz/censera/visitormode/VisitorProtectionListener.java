@@ -1,7 +1,6 @@
 package xyz.censera.visitormode;
 
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,8 +22,6 @@ import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 final class VisitorProtectionListener implements Listener {
-    private static final double MAX_DISTANCE_SQUARED = 200.0 * 200.0;
-
     private final VisitorMode plugin;
 
     VisitorProtectionListener(VisitorMode plugin) {
@@ -129,7 +126,7 @@ final class VisitorProtectionListener implements Listener {
             return;
         }
 
-        if (!withinVisitorBoundary(to)) {
+        if (!plugin.isWithinVisitorBoundary(player, to)) {
             event.setTo(event.getFrom());
         }
     }
@@ -149,20 +146,8 @@ final class VisitorProtectionListener implements Listener {
             return;
         }
 
-        if (!withinVisitorBoundary(to)) {
+        if (!plugin.isWithinVisitorBoundary(player, to)) {
             event.setCancelled(true);
         }
-    }
-
-    private boolean withinVisitorBoundary(Location location) {
-        World world = location.getWorld();
-        if (world == null || world.getEnvironment() != World.Environment.NORMAL) {
-            return false;
-        }
-
-        Location spawn = world.getSpawnLocation();
-        double dx = location.getX() - spawn.getX();
-        double dz = location.getZ() - spawn.getZ();
-        return dx * dx + dz * dz <= MAX_DISTANCE_SQUARED;
     }
 }
