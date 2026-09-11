@@ -47,8 +47,12 @@ final class AuthCommand implements CommandExecutor {
         plugin.getAuth().register(player, args[0], result -> {
             switch (result) {
                 case "ok" -> {
-                    player.sendMessage(ChatColor.GREEN + "Registered and logged in.");
                     plugin.tryUpgrade(player);
+                    if (plugin.getRegistry().contains(player.getUniqueId())) {
+                        player.sendMessage(ChatColor.GREEN + "Registered and logged in. You are not whitelisted, so Visitor Mode remains active.");
+                    } else {
+                        player.sendMessage(ChatColor.GREEN + "Registered and logged in. Full access granted.");
+                    }
                 }
                 case "already-registered" -> player.sendMessage(ChatColor.RED + "You are already registered.");
                 case "rate-limited" -> player.sendMessage(ChatColor.RED + "Please wait before trying again.");
@@ -70,8 +74,12 @@ final class AuthCommand implements CommandExecutor {
             }
             switch (result) {
                 case "ok" -> {
-                    player.sendMessage(ChatColor.GREEN + "Logged in.");
                     plugin.tryUpgrade(player);
+                    if (plugin.getRegistry().contains(player.getUniqueId())) {
+                        player.sendMessage(ChatColor.GREEN + "Logged in. You are not whitelisted, so Visitor Mode remains active.");
+                    } else {
+                        player.sendMessage(ChatColor.GREEN + "Logged in. Full access granted.");
+                    }
                 }
                 case "not-registered" -> player.sendMessage(ChatColor.RED + "You are not registered. Use /register <password>.");
                 case "2fa-required" -> player.sendMessage(ChatColor.RED + "Your account requires a 2FA code.");
