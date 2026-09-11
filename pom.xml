@@ -7,7 +7,7 @@
 
     <groupId>xyz.censera</groupId>
     <artifactId>ce-eye</artifactId>
-    <version>5.0.0</version>
+    <version>5.1.0</version>
     <packaging>jar</packaging>
 
     <name>ce-eye</name>
