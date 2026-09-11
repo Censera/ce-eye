@@ -1,4 +1,4 @@
-package xyz.censera.guestmode;
+package xyz.censera.visitormode;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -13,9 +13,9 @@ import java.util.Locale;
 import java.util.UUID;
 
 final class AuthListener implements Listener {
-    private final GuestMode plugin;
+    private final VisitorMode plugin;
 
-    AuthListener(GuestMode plugin) {
+    AuthListener(VisitorMode plugin) {
         this.plugin = plugin;
     }
 
@@ -29,7 +29,7 @@ final class AuthListener implements Listener {
             return;
         }
 
-        plugin.enterGuest(player);
+        plugin.enterVisitor(player);
         player.sendMessage(ChatColor.YELLOW + "Please log in with /login <password> or register with /register <password>.");
 
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {

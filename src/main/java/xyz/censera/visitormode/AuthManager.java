@@ -1,4 +1,4 @@
-package xyz.censera.guestmode;
+package xyz.censera.visitormode;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -31,7 +31,7 @@ final class AuthManager {
     private static final SecureRandom RANDOM = new SecureRandom();
     private static final String BASE32 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 
-    private final GuestMode plugin;
+    private final VisitorMode plugin;
     private final File file;
     private final YamlConfiguration data;
     private final Map<UUID, Account> accounts = new HashMap<>();
@@ -39,7 +39,7 @@ final class AuthManager {
     private final Map<UUID, String> pendingTotp = new HashMap<>();
     private final Map<UUID, FailureState> failures = new HashMap<>();
 
-    AuthManager(GuestMode plugin) {
+    AuthManager(VisitorMode plugin) {
         this.plugin = plugin;
         file = new File(plugin.getDataFolder(), "accounts.yml");
         migrateLegacyAccounts();

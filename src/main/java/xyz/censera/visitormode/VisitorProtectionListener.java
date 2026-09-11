@@ -1,4 +1,4 @@
-package xyz.censera.guestmode;
+package xyz.censera.visitormode;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -22,43 +22,43 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-final class GuestProtectionListener implements Listener {
+final class VisitorProtectionListener implements Listener {
     private static final double MAX_DISTANCE_SQUARED = 200.0 * 200.0;
 
-    private final GuestMode plugin;
+    private final VisitorMode plugin;
 
-    GuestProtectionListener(GuestMode plugin) {
+    VisitorProtectionListener(VisitorMode plugin) {
         this.plugin = plugin;
     }
 
-    private boolean guest(Player player) {
+    private boolean visitor(Player player) {
         return plugin.getRegistry().contains(player.getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player player && guest(player)) {
+        if (event.getEntity() instanceof Player player && visitor(player)) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onAttack(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Player player && guest(player)) {
+        if (event.getDamager() instanceof Player player && visitor(player)) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onTarget(EntityTargetLivingEntityEvent event) {
-        if (event.getTarget() instanceof Player player && guest(player)) {
+        if (event.getTarget() instanceof Player player && visitor(player)) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onFood(FoodLevelChangeEvent event) {
-        if (event.getEntity() instanceof Player player && guest(player)) {
+        if (event.getEntity() instanceof Player player && visitor(player)) {
             event.setCancelled(true);
             player.setFoodLevel(20);
             player.setSaturation(20.0f);
@@ -67,56 +67,56 @@ final class GuestProtectionListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent event) {
-        if (guest(event.getPlayer())) {
+        if (visitor(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBreak(BlockBreakEvent event) {
-        if (guest(event.getPlayer())) {
+        if (visitor(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlace(BlockPlaceEvent event) {
-        if (guest(event.getPlayer())) {
+        if (visitor(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDrop(PlayerDropItemEvent event) {
-        if (guest(event.getPlayer())) {
+        if (visitor(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPickup(EntityPickupItemEvent event) {
-        if (event.getEntity() instanceof Player player && guest(player)) {
+        if (event.getEntity() instanceof Player player && visitor(player)) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryOpen(InventoryOpenEvent event) {
-        if (event.getPlayer() instanceof Player player && guest(player)) {
+        if (event.getPlayer() instanceof Player player && visitor(player)) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent event) {
-        if (event.getWhoClicked() instanceof Player player && guest(player)) {
+        if (event.getWhoClicked() instanceof Player player && visitor(player)) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryDrag(InventoryDragEvent event) {
-        if (event.getWhoClicked() instanceof Player player && guest(player)) {
+        if (event.getWhoClicked() instanceof Player player && visitor(player)) {
             event.setCancelled(true);
         }
     }
@@ -125,18 +125,18 @@ final class GuestProtectionListener implements Listener {
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         Location to = event.getTo();
-        if (!guest(player) || to == null) {
+        if (!visitor(player) || to == null) {
             return;
         }
 
-        if (!withinGuestBoundary(to)) {
+        if (!withinVisitorBoundary(to)) {
             event.setTo(event.getFrom());
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPortal(PlayerPortalEvent event) {
-        if (guest(event.getPlayer())) {
+        if (visitor(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
@@ -145,16 +145,16 @@ final class GuestProtectionListener implements Listener {
     public void onTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
         Location to = event.getTo();
-        if (!guest(player) || to == null) {
+        if (!visitor(player) || to == null) {
             return;
         }
 
-        if (!withinGuestBoundary(to)) {
+        if (!withinVisitorBoundary(to)) {
             event.setCancelled(true);
         }
     }
 
-    private boolean withinGuestBoundary(Location location) {
+    private boolean withinVisitorBoundary(Location location) {
         World world = location.getWorld();
         if (world == null || world.getEnvironment() != World.Environment.NORMAL) {
             return false;

@@ -1,4 +1,4 @@
-package xyz.censera.guestmode;
+package xyz.censera.visitormode;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -23,13 +23,13 @@ import java.util.concurrent.TimeUnit;
 final class TwoFactorSetupServer {
     private static final SecureRandom RANDOM = new SecureRandom();
     private static final int QR_SIZE = 57;
-    private final GuestMode plugin;
+    private final VisitorMode plugin;
     private HttpServer server;
     private ExecutorService executor;
     private Setup setup;
     private long expiryMs;
 
-    TwoFactorSetupServer(GuestMode plugin) {
+    TwoFactorSetupServer(VisitorMode plugin) {
         this.plugin = plugin;
     }
 

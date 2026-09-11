@@ -1,4 +1,4 @@
-package xyz.censera.guestmode;
+package xyz.censera.visitormode;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -14,9 +14,9 @@ import org.bukkit.entity.Player;
 import java.io.IOException;
 
 final class AuthCommand implements CommandExecutor {
-    private final GuestMode plugin;
+    private final VisitorMode plugin;
 
-    AuthCommand(GuestMode plugin) {
+    AuthCommand(VisitorMode plugin) {
         this.plugin = plugin;
     }
 

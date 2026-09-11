@@ -1,4 +1,4 @@
-package xyz.censera.guestmode;
+package xyz.censera.visitormode;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-final class GuestModeCommand implements CommandExecutor, TabCompleter {
+final class VisitorModeCommand implements CommandExecutor, TabCompleter {
 
-    private static final List<String> SUBCOMMANDS = List.of("reload", "list", "kick-guests");
+    private static final List<String> SUBCOMMANDS = List.of("reload", "list", "kick-visitors");
 
-    private final GuestMode plugin;
+    private final VisitorMode plugin;
 
-    GuestModeCommand(GuestMode plugin) {
+    VisitorModeCommand(VisitorMode plugin) {
         this.plugin = plugin;
     }
 
@@ -38,7 +38,7 @@ final class GuestModeCommand implements CommandExecutor, TabCompleter {
         switch (args[0].toLowerCase()) {
             case "reload" -> handleReload(sender);
             case "list" -> handleList(sender);
-            case "kick-guests" -> handleKickGuests(sender);
+            case "kick-visitors" -> handleKickVisitors(sender);
             default -> sendUsage(sender);
         }
         return true;
@@ -51,33 +51,33 @@ final class GuestModeCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleList(CommandSender sender) {
-        Set<UUID> guests = plugin.getRegistry().snapshot();
+        Set<UUID> visitors = plugin.getRegistry().snapshot();
 
-        if (guests.isEmpty()) {
-            sender.sendMessage(ChatColor.YELLOW + "No guests are currently online.");
+        if (visitors.isEmpty()) {
+            sender.sendMessage(ChatColor.YELLOW + "No visitors are currently online.");
             return;
         }
 
-        List<String> names = new ArrayList<>(guests.size());
-        for (UUID uuid : guests) {
+        List<String> names = new ArrayList<>(visitors.size());
+        for (UUID uuid : visitors) {
             Player player = Bukkit.getPlayer(uuid);
             names.add(player != null ? player.getName() : "(offline:" + uuid + ")");
         }
 
-        sender.sendMessage(ChatColor.GOLD + "Online guests (" + guests.size() + "): "
+        sender.sendMessage(ChatColor.GOLD + "Online visitors (" + visitors.size() + "): "
                 + ChatColor.WHITE + String.join(", ", names));
     }
 
-    private void handleKickGuests(CommandSender sender) {
-        Set<UUID> guests = plugin.getRegistry().snapshot();
+    private void handleKickVisitors(CommandSender sender) {
+        Set<UUID> visitors = plugin.getRegistry().snapshot();
 
-        if (guests.isEmpty()) {
-            sender.sendMessage(ChatColor.YELLOW + "No guests to kick.");
+        if (visitors.isEmpty()) {
+            sender.sendMessage(ChatColor.YELLOW + "No visitors to kick.");
             return;
         }
 
         int kicked = 0;
-        for (UUID uuid : guests) {
+        for (UUID uuid : visitors) {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null && player.isOnline()) {
                 player.kickPlayer(ChatColor.RED + "You have been removed from the server.");
@@ -86,8 +86,8 @@ final class GuestModeCommand implements CommandExecutor, TabCompleter {
             plugin.getRegistry().remove(uuid);
         }
 
-        sender.sendMessage(ChatColor.GREEN + "Kicked " + kicked + " guest(s).");
-        plugin.getLogger().info(sender.getName() + " kicked " + kicked + " guest(s).");
+        sender.sendMessage(ChatColor.GREEN + "Kicked " + kicked + " visitor(s).");
+        plugin.getLogger().info(sender.getName() + " kicked " + kicked + " visitor(s).");
     }
 
     @Override
@@ -109,9 +109,9 @@ final class GuestModeCommand implements CommandExecutor, TabCompleter {
     private void sendUsage(CommandSender sender) {
         sender.sendMessage(ChatColor.GOLD + "Eyes administration:");
         sender.sendMessage(ChatColor.YELLOW + "  /eyes reload" + ChatColor.GRAY + " - reload configuration");
-        sender.sendMessage(ChatColor.YELLOW + "  /eyes list" + ChatColor.GRAY + " - list online guests");
-        sender.sendMessage(ChatColor.YELLOW + "  /eyes kick-guests" + ChatColor.GRAY + " - kick all online guests");
-        sender.sendMessage(ChatColor.GOLD + "Guest utilities:");
+        sender.sendMessage(ChatColor.YELLOW + "  /eyes list" + ChatColor.GRAY + " - list online visitors");
+        sender.sendMessage(ChatColor.YELLOW + "  /eyes kick-visitors" + ChatColor.GRAY + " - kick all online visitors");
+        sender.sendMessage(ChatColor.GOLD + "Visitor utilities:");
         sender.sendMessage(ChatColor.YELLOW + "  /guest unstuck" + ChatColor.GRAY + " - teleport to bed spawn or world spawn");
         sender.sendMessage(ChatColor.YELLOW + "  /guest nudge" + ChatColor.GRAY + " - teleport 10 blocks upward (30s cooldown)");
         sender.sendMessage(ChatColor.GOLD + "Authentication:");
