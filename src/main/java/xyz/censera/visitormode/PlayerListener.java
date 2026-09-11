@@ -1,4 +1,4 @@
-package xyz.censera.guestmode;
+package xyz.censera.visitormode;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -6,9 +6,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 final class PlayerListener implements Listener {
-    private final GuestMode plugin;
+    private final VisitorMode plugin;
 
-    PlayerListener(GuestMode plugin) {
+    PlayerListener(VisitorMode plugin) {
         this.plugin = plugin;
     }
 
@@ -16,7 +16,7 @@ final class PlayerListener implements Listener {
     public void onJoin(org.bukkit.event.player.PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (!player.hasPermission("eyes.bypass")) {
-            plugin.enterGuest(player);
+            plugin.enterVisitor(player);
         }
     }
 

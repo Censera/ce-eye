@@ -33,20 +33,20 @@ FastLogin provides optional premium authentication. Floodgate provides Bedrock a
 
 Authentication establishes identity. It does not establish trust.
 
-## Guest mode
+## Visitor mode
 
-Players remain in Guest Mode until they are both authenticated and trusted through the server whitelist.
+Players remain in Visitor Mode until they are both authenticated and trusted through the server whitelist.
 
-Guests cannot:
+Visitors cannot:
 
 - use normal commands before authentication
 - damage or be damaged by entities
 - interact with the world normally
-- move more than 200 blocks horizontally from the configured guest spawn
+- move more than 200 blocks horizontally from the configured visitor spawn
 - enter the Nether or End
 - use cross-world teleports
 
-A player who authenticates without being whitelisted remains a guest.
+A player who authenticates without being whitelisted remains a visitor.
 
 A whitelisted offline-mode player still has to authenticate.
 
@@ -56,16 +56,16 @@ A whitelisted offline-mode player still has to authenticate.
 |---|---|
 | `/eyes reload` | Reload Ce’s Eye configuration |
 | `/eyes list` | List relevant player state |
-| `/eyes kick-guests` | Kick players currently in Guest Mode |
-| `/guest unstuck` | Move a guest out of an invalid position |
-| `/guest nudge` | Move a guest back toward the guest area |
+| `/eyes kick-visitors` | Kick players currently in Visitor Mode |
+| `/guest unstuck` | Move a visitor out of an invalid position |
+| `/guest nudge` | Move a visitor back toward the visitor area |
 | `/register <password>` | Create an offline-mode account |
 | `/login <password> [2fa-code]` | Authenticate an account |
 | `/2fa <enable\|confirm\|disable> [code]` | Manage TOTP authentication |
 
 The `eyes.admin` permission grants administrative commands.
 
-The `eyes.bypass` permission bypasses authentication and Guest Mode restrictions.
+The `eyes.bypass` permission bypasses authentication and Visitor Mode restrictions.
 
 ## Integrations
 

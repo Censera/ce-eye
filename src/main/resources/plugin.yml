@@ -1,6 +1,6 @@
 name: Eyes
 version: "${project.version}"
-main: xyz.censera.guestmode.GuestMode
+main: xyz.censera.visitormode.VisitorMode
 api-version: "26.2"
 description: Authentication, trust, and world protection for offline-mode Paper servers.
 authors: [Censera]
@@ -9,10 +9,10 @@ softdepend: [floodgate, FastLogin, Geyser-Spigot, ViaVersion, ViaBackwards]
 commands:
   eyes:
     description: Eyes administration commands.
-    usage: /eyes <reload|list|kick-guests>
+    usage: /eyes <reload|list|kick-visitors>
     permission: eyes.admin
   guest:
-    description: Guest utility commands.
+    description: Visitor utility commands.
     usage: /guest <unstuck|nudge>
   register:
     description: Register your offline-mode account.
@@ -29,5 +29,5 @@ permissions:
     description: Access to all /eyes administration commands.
     default: op
   eyes.bypass:
-    description: Skip Eyes authentication and guest restrictions.
+    description: Skip Eyes authentication and visitor restrictions.
     default: op

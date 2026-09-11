@@ -1,4 +1,4 @@
-package xyz.censera.guestmode;
+package xyz.censera.visitormode;
 
 import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -7,10 +7,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Locale;
 
 final class PluginConfig {
-    private final String guestJoinMessage;
+    private final String visitorJoinMessage;
     private final String upgradeMessage;
     private final String broadcastOnUpgrade;
-    private final GameMode guestGameMode;
+    private final GameMode visitorGameMode;
     private final GameMode upgradeGameMode;
     private final String twoFactorWebHost;
     private final int twoFactorWebPort;
@@ -19,10 +19,10 @@ final class PluginConfig {
     PluginConfig(JavaPlugin plugin) {
         FileConfiguration cfg = plugin.getConfig();
 
-        guestJoinMessage = requiredString(cfg, "guest-join-message");
+        visitorJoinMessage = requiredString(cfg, "visitor-join-message");
         upgradeMessage = requiredString(cfg, "upgrade-message");
         broadcastOnUpgrade = cfg.getString("broadcast-on-upgrade", "");
-        guestGameMode = parseGameMode(cfg, "guest-gamemode", GameMode.ADVENTURE, GameMode.SPECTATOR);
+        visitorGameMode = parseGameMode(cfg, "visitor-gamemode", GameMode.ADVENTURE, GameMode.SPECTATOR);
         upgradeGameMode = parseGameMode(cfg, "upgrade-gamemode", GameMode.SURVIVAL, GameMode.CREATIVE);
         twoFactorWebHost = requiredString(cfg, "two-factor-web-host");
         twoFactorWebPort = cfg.getInt("two-factor-web-port", 0);
@@ -58,10 +58,10 @@ final class PluginConfig {
         return mode;
     }
 
-    String getGuestJoinMessage() { return guestJoinMessage; }
+    String getVisitorJoinMessage() { return visitorJoinMessage; }
     String getUpgradeMessage() { return upgradeMessage; }
     String getBroadcastOnUpgrade() { return broadcastOnUpgrade; }
-    GameMode getGuestGameMode() { return guestGameMode; }
+    GameMode getVisitorGameMode() { return visitorGameMode; }
     GameMode getUpgradeGameMode() { return upgradeGameMode; }
     String getTwoFactorWebHost() { return twoFactorWebHost; }
     int getTwoFactorWebPort() { return twoFactorWebPort; }

@@ -1,4 +1,4 @@
-package xyz.censera.guestmode;
+package xyz.censera.visitormode;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -11,12 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-final class GuestCommand implements CommandExecutor {
+final class VisitorCommand implements CommandExecutor {
     private static final long NUDGE_COOLDOWN_MS = 30_000L;
-    private final GuestMode plugin;
+    private final VisitorMode plugin;
     private final Map<UUID, Long> nudgeCooldowns = new HashMap<>();
 
-    GuestCommand(GuestMode plugin) {
+    VisitorCommand(VisitorMode plugin) {
         this.plugin = plugin;
     }
 
@@ -28,7 +28,7 @@ final class GuestCommand implements CommandExecutor {
         }
 
         if (!plugin.getRegistry().contains(player.getUniqueId())) {
-            player.sendMessage(ChatColor.RED + "This command is only available in Guest Mode.");
+            player.sendMessage(ChatColor.RED + "This command is only available in Visitor Mode.");
             return true;
         }
 
@@ -46,7 +46,7 @@ final class GuestCommand implements CommandExecutor {
     }
 
     private void unstuck(Player player) {
-        plugin.moveGuestToSafeLocation(player);
+        plugin.moveVisitorToSafeLocation(player);
         player.sendMessage(ChatColor.GREEN + "Teleported to a safe location.");
     }
 
@@ -61,8 +61,8 @@ final class GuestCommand implements CommandExecutor {
         }
 
         Location target = player.getLocation().clone().add(0, 10, 0);
-        if (!plugin.isGuestWorld(target.getWorld()) || !plugin.isWithinGuestBoundary(target)) {
-            player.sendMessage(ChatColor.RED + "You cannot move outside Guest Mode's safe area.");
+        if (!plugin.isVisitorWorld(target.getWorld()) || !plugin.isWithinVisitorBoundary(target)) {
+            player.sendMessage(ChatColor.RED + "You cannot move outside Visitor Mode's safe area.");
             return;
         }
         player.teleport(target);
@@ -71,7 +71,7 @@ final class GuestCommand implements CommandExecutor {
     }
 
     private void sendUsage(Player player) {
-        player.sendMessage(ChatColor.GOLD + "Guest commands:");
+        player.sendMessage(ChatColor.GOLD + "Visitor commands:");
         player.sendMessage(ChatColor.YELLOW + "  /guest unstuck" + ChatColor.GRAY + "  Return to a safe location.");
         player.sendMessage(ChatColor.YELLOW + "  /guest nudge" + ChatColor.GRAY + "  Teleport 10 blocks upward. 30 second cooldown.");
     }

@@ -1,4 +1,4 @@
-package xyz.censera.guestmode;
+package xyz.censera.visitormode;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,10 +9,10 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.UUID;
 
 final class UpgradeTask {
-    private final GuestMode plugin;
+    private final VisitorMode plugin;
     private BukkitTask task;
 
-    UpgradeTask(GuestMode plugin) {
+    UpgradeTask(VisitorMode plugin) {
         this.plugin = plugin;
     }
 
@@ -33,7 +33,7 @@ final class UpgradeTask {
     }
 
     private void tick() {
-        GuestRegistry registry = plugin.getRegistry();
+        VisitorRegistry registry = plugin.getRegistry();
         PluginConfig config = plugin.getPluginConfig();
 
         for (UUID uuid : registry.snapshot()) {
@@ -51,8 +51,7 @@ final class UpgradeTask {
     }
 
     private void upgrade(Player player, PluginConfig config) {
-        plugin.moveGuestToSafeLocation(player);
-        plugin.exitGuest(player);
+        plugin.exitVisitor(player);
 
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', config.getUpgradeMessage()));
 
@@ -63,6 +62,6 @@ final class UpgradeTask {
         }
 
         plugin.getLogger().info(player.getName()
-                + " is trusted and authenticated; upgraded from Guest Mode.");
+                + " is trusted and authenticated; upgraded from Visitor Mode.");
     }
 }
