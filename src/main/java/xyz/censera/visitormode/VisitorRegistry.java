@@ -1,25 +1,33 @@
 package xyz.censera.visitormode;
 
-import java.util.HashSet;
+import org.bukkit.Location;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 final class VisitorRegistry {
-    private final Set<UUID> visitors = new HashSet<>();
+    private final Map<UUID, Location> anchors = new HashMap<>();
 
-    void add(UUID uuid) {
-        visitors.add(uuid);
+    void add(UUID uuid, Location anchor) {
+        anchors.put(uuid, anchor.clone());
     }
 
     void remove(UUID uuid) {
-        visitors.remove(uuid);
+        anchors.remove(uuid);
     }
 
     boolean contains(UUID uuid) {
-        return visitors.contains(uuid);
+        return anchors.containsKey(uuid);
+    }
+
+    Location anchor(UUID uuid) {
+        Location anchor = anchors.get(uuid);
+        return anchor == null ? null : anchor.clone();
     }
 
     Set<UUID> snapshot() {
-        return Set.copyOf(visitors);
+        return Set.copyOf(anchors.keySet());
     }
 }

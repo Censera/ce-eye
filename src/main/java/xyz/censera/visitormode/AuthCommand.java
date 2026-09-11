@@ -46,7 +46,10 @@ final class AuthCommand implements CommandExecutor {
         }
         plugin.getAuth().register(player, args[0], result -> {
             switch (result) {
-                case "ok" -> player.sendMessage(ChatColor.GREEN + "Registered and logged in.");
+                case "ok" -> {
+                    player.sendMessage(ChatColor.GREEN + "Registered and logged in.");
+                    plugin.tryUpgrade(player);
+                }
                 case "already-registered" -> player.sendMessage(ChatColor.RED + "You are already registered.");
                 case "rate-limited" -> player.sendMessage(ChatColor.RED + "Please wait before trying again.");
                 default -> player.sendMessage(ChatColor.RED + "Registration failed.");
@@ -66,7 +69,10 @@ final class AuthCommand implements CommandExecutor {
                 return;
             }
             switch (result) {
-                case "ok" -> player.sendMessage(ChatColor.GREEN + "Logged in.");
+                case "ok" -> {
+                    player.sendMessage(ChatColor.GREEN + "Logged in.");
+                    plugin.tryUpgrade(player);
+                }
                 case "not-registered" -> player.sendMessage(ChatColor.RED + "You are not registered. Use /register <password>.");
                 case "2fa-required" -> player.sendMessage(ChatColor.RED + "Your account requires a 2FA code.");
                 case "invalid-2fa" -> player.sendMessage(ChatColor.RED + "Invalid 2FA code.");

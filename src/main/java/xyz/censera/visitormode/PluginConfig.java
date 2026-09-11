@@ -10,7 +10,6 @@ final class PluginConfig {
     private final String visitorJoinMessage;
     private final String upgradeMessage;
     private final String broadcastOnUpgrade;
-    private final GameMode visitorGameMode;
     private final GameMode upgradeGameMode;
     private final String twoFactorWebHost;
     private final int twoFactorWebPort;
@@ -22,7 +21,6 @@ final class PluginConfig {
         visitorJoinMessage = requiredString(cfg, "visitor-join-message");
         upgradeMessage = requiredString(cfg, "upgrade-message");
         broadcastOnUpgrade = cfg.getString("broadcast-on-upgrade", "");
-        visitorGameMode = parseGameMode(cfg, "visitor-gamemode", GameMode.ADVENTURE, GameMode.SPECTATOR);
         upgradeGameMode = parseGameMode(cfg, "upgrade-gamemode", GameMode.SURVIVAL, GameMode.CREATIVE);
         twoFactorWebHost = requiredString(cfg, "two-factor-web-host");
         twoFactorWebPort = cfg.getInt("two-factor-web-port", 0);
@@ -61,7 +59,6 @@ final class PluginConfig {
     String getVisitorJoinMessage() { return visitorJoinMessage; }
     String getUpgradeMessage() { return upgradeMessage; }
     String getBroadcastOnUpgrade() { return broadcastOnUpgrade; }
-    GameMode getVisitorGameMode() { return visitorGameMode; }
     GameMode getUpgradeGameMode() { return upgradeGameMode; }
     String getTwoFactorWebHost() { return twoFactorWebHost; }
     int getTwoFactorWebPort() { return twoFactorWebPort; }

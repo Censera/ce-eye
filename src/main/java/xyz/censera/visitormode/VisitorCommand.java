@@ -61,7 +61,7 @@ final class VisitorCommand implements CommandExecutor {
         }
 
         Location target = player.getLocation().clone().add(0, 10, 0);
-        if (!plugin.isVisitorWorld(target.getWorld()) || !plugin.isWithinVisitorBoundary(player, target)) {
+        if (!plugin.isWithinVisitorBoundary(player, target)) {
             player.sendMessage(ChatColor.RED + "You cannot move outside Visitor Mode's safe area.");
             return;
         }
