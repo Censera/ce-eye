@@ -1,4 +1,4 @@
-name: Eyes
+name: eyec
 version: "${project.version}"
 main: xyz.censera.visitormode.VisitorMode
 api-version: "26.2"
@@ -7,10 +7,10 @@ authors: [Censera]
 softdepend: [floodgate, FastLogin, Geyser-Spigot, ViaVersion, ViaBackwards]
 
 commands:
-  eyes:
-    description: Eyes administration commands.
-    usage: /eyes <reload|list|kick-visitors>
-    permission: eyes.admin
+  eyec:
+    description: Censera's Eye administration commands.
+    usage: /eyec <reload|list|kick-visitors>
+    permission: eyec.admin
   guest:
     description: Visitor utility commands.
     usage: /guest <unstuck|nudge>
@@ -25,9 +25,9 @@ commands:
     usage: /2fa <enable|confirm|disable> [code]
 
 permissions:
-  eyes.admin:
-    description: Access to all /eyes administration commands.
+  eyec.admin:
+    description: Access to all /eyec administration commands.
     default: op
-  eyes.bypass:
-    description: Skip Eyes authentication and visitor restrictions.
+  eyec.bypass:
+    description: Skip eyec authentication and visitor restrictions.
     default: op
