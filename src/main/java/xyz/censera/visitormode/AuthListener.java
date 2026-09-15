@@ -5,9 +5,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.util.Locale;
 import java.util.UUID;
@@ -30,6 +32,11 @@ final class AuthListener implements Listener {
         }
 
         plugin.enterVisitor(player);
+        plugin.getServer().getScheduler().runTask(plugin, () -> {
+            if (player.isOnline() && plugin.getRegistry().contains(uuid)) {
+                plugin.applyVisitorBoundary(player);
+            }
+        });
         player.sendMessage(ChatColor.YELLOW + "Please log in with /login <password> or register with /register <password>");
 
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
@@ -52,6 +59,28 @@ final class AuthListener implements Listener {
         plugin.getAuthenticated().remove(uuid);
         plugin.getAuth().cancelTotp(uuid);
         plugin.getRegistry().remove(uuid);
+    }
+
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+        if (!plugin.getRegistry().contains(player.getUniqueId())) {
+            return;
+        }
+
+        plugin.getServer().getScheduler().runTask(plugin, () -> {
+            if (player.isOnline() && plugin.getRegistry().contains(player.getUniqueId())) {
+                plugin.applyVisitorBoundary(player);
+            }
+        });
+    }
+
+    @EventHandler
+    public void onChangedWorld(PlayerChangedWorldEvent event) {
+        Player player = event.getPlayer();
+        if (plugin.getRegistry().contains(player.getUniqueId())) {
+            plugin.applyVisitorBoundary(player);
+        }
     }
 
     @EventHandler
