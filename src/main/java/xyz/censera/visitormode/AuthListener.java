@@ -48,7 +48,10 @@ final class AuthListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        plugin.getAuthenticated().remove(event.getPlayer().getUniqueId());
+        UUID uuid = event.getPlayer().getUniqueId();
+        plugin.getAuthenticated().remove(uuid);
+        plugin.getAuth().cancelTotp(uuid);
+        plugin.getRegistry().remove(uuid);
     }
 
     @EventHandler
