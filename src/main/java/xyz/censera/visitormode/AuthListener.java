@@ -24,7 +24,7 @@ final class AuthListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        if (player.hasPermission("eyes.bypass") || plugin.isFloodgatePlayer(uuid)) {
+        if (player.hasPermission("eyec.bypass") || plugin.isFloodgatePlayer(uuid)) {
             plugin.getAuthenticated().add(uuid);
             return;
         }
@@ -61,7 +61,8 @@ final class AuthListener implements Listener {
         String command = event.getMessage().toLowerCase(Locale.ROOT);
         if (!command.startsWith("/login ") && !command.equals("/login")
                 && !command.startsWith("/register ") && !command.equals("/register")
-                && !command.startsWith("/guest ") && !command.equals("/guest")) {
+                && !command.startsWith("/guest ") && !command.equals("/guest")
+                && !command.startsWith("/eyec ") && !command.equals("/eyec")) {
             event.setCancelled(true);
             player.sendMessage(ChatColor.RED + "You must authenticate first.");
         }
