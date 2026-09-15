@@ -3,6 +3,8 @@ package xyz.censera.visitormode;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,9 +14,10 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class VisitorMode extends JavaPlugin {
-    private static final double MAX_DISTANCE_SQUARED = 200.0 * 200.0;
+    private static final double VISITOR_GRID_SIZE = 400.0;
+    private static final double VISITOR_RADIUS = VISITOR_GRID_SIZE / 2.0;
+    private static final double VISITOR_RADIUS_SQUARED = VISITOR_RADIUS * VISITOR_RADIUS;
 
-    private VisitorRegistry registry;
     private PluginConfig pluginConfig;
     private UpgradeTask upgradeTask;
     private AuthManager auth;
@@ -26,7 +29,6 @@ public final class VisitorMode extends JavaPlugin {
         saveDefaultConfig();
         pluginConfig = new PluginConfig(this);
 
-        registry = new VisitorRegistry();
         auth = new AuthManager(this);
         twoFactorSetupServer = new TwoFactorSetupServer(this);
 
@@ -66,10 +68,9 @@ public final class VisitorMode extends JavaPlugin {
     }
 
     void enterVisitor(Player player) {
-        UUID uuid = player.getUniqueId();
-        if (registry.contains(uuid)) return;
+        if (player.hasPermission("eyec.bypass") || player.isOp()) return;
 
-        registry.add(uuid, player.getLocation());
+        applyVisitorBoundary(player);
         player.setGameMode(GameMode.ADVENTURE);
         player.setFoodLevel(20);
         player.setSaturation(20);
@@ -81,34 +82,42 @@ public final class VisitorMode extends JavaPlugin {
         UUID uuid = player.getUniqueId();
         auth.cancelTotp(uuid);
         twoFactorSetupServer.stopFor(uuid);
-        registry.remove(uuid);
+        clearVisitorBoundary(player);
         player.setGameMode(pluginConfig.getUpgradeGameMode());
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', pluginConfig.getUpgradeMessage()));
     }
 
-    void moveVisitorToSafeLocation(Player player) {
-        UUID uuid = player.getUniqueId();
-        Location anchor = registry.anchor(uuid);
-        if (anchor == null) {
-            throw new IllegalStateException("No visitor anchor is available for " + player.getName());
-        }
+    void applyVisitorBoundary(Player player) {
+        Location center = visitorCellCenter(player.getLocation());
+        WorldBorder border = getServer().createWorldBorder();
+        border.setCenter(center.getX(), center.getZ());
+        border.setSize(VISITOR_GRID_SIZE);
+        border.setWarningDistance(16);
+        border.setWarningTime(0);
+        border.setDamageBuffer(0);
+        border.setDamageAmount(0);
+        player.setWorldBorder(border);
+    }
 
-        Location target = findSafeLocation(anchor);
+    void clearVisitorBoundary(Player player) {
+        player.setWorldBorder(null);
+    }
+
+    void moveVisitorToSafeLocation(Player player) {
+        Location center = visitorCellCenter(player.getLocation());
+        World world = player.getWorld();
+        Location target = findSafeLocation(center, world);
         if (target == null) {
             throw new IllegalStateException("No safe visitor location is available for " + player.getName());
         }
-
         player.teleport(target);
     }
 
-    private Location findSafeLocation(Location anchor) {
-        if (isValidVisitorLocation(anchor, anchor)) return anchor;
+    private Location findSafeLocation(Location center, World world) {
+        if (isValidVisitorLocation(center, world)) return center;
 
-        org.bukkit.World world = anchor.getWorld();
-        if (world == null) return null;
-
-        int baseX = anchor.getBlockX();
-        int baseZ = anchor.getBlockZ();
+        int baseX = center.getBlockX();
+        int baseZ = center.getBlockZ();
         for (int radius = 1; radius <= 16; radius++) {
             for (int x = -radius; x <= radius; x++) {
                 for (int z = -radius; z <= radius; z++) {
@@ -117,31 +126,56 @@ public final class VisitorMode extends JavaPlugin {
                     int blockZ = baseZ + z;
                     int y = world.getHighestBlockYAt(blockX, blockZ) + 1;
                     Location candidate = new Location(world, blockX + 0.5, y, blockZ + 0.5);
-                    if (isValidVisitorLocation(candidate, anchor)) return candidate;
+                    if (isValidVisitorLocation(candidate, world)) return candidate;
                 }
             }
         }
         return null;
     }
 
-    private boolean isValidVisitorLocation(Location location, Location anchor) {
-        return location != null
-                && anchor != null
-                && isWithinVisitorBoundary(anchor, location)
+    private boolean isValidVisitorLocation(Location location, World world) {
+        if (location == null || world == null || location.getWorld() != world) return false;
+        return isWithinVisitorBoundary(location)
                 && !isDangerous(location)
                 && location.getBlock().isPassable()
                 && location.clone().add(0, 1, 0).getBlock().isPassable();
     }
 
     boolean isWithinVisitorBoundary(Player player, Location location) {
-        return isWithinVisitorBoundary(registry.anchor(player.getUniqueId()), location);
+        return isWithinVisitorBoundary(location) && sameVisitorCell(player.getLocation(), location);
     }
 
-    private boolean isWithinVisitorBoundary(Location anchor, Location location) {
-        if (anchor == null || location == null || anchor.getWorld() != location.getWorld()) return false;
-        double dx = location.getX() - anchor.getX();
-        double dz = location.getZ() - anchor.getZ();
-        return dx * dx + dz * dz <= MAX_DISTANCE_SQUARED;
+    private boolean isWithinVisitorBoundary(Location location) {
+        if (location == null || location.getWorld() == null) return false;
+        Location center = visitorCellCenter(location);
+        double dx = location.getX() - center.getX();
+        double dz = location.getZ() - center.getZ();
+        return dx * dx + dz * dz <= VISITOR_RADIUS_SQUARED;
+    }
+
+    private boolean sameVisitorCell(Location first, Location second) {
+        if (first == null || second == null || first.getWorld() != second.getWorld()) return false;
+        Location firstCenter = visitorCellCenter(first);
+        Location secondCenter = visitorCellCenter(second);
+        return firstCenter.getX() == secondCenter.getX()
+                && firstCenter.getZ() == secondCenter.getZ();
+    }
+
+    private Location visitorCellCenter(Location location) {
+        World world = location.getWorld();
+        if (world == null) return location.clone();
+
+        Location spawn = world.getSpawnLocation();
+        double originX = spawn.getX() - VISITOR_RADIUS;
+        double originZ = spawn.getZ() - VISITOR_RADIUS;
+        long cellX = (long) Math.floor((location.getX() - originX) / VISITOR_GRID_SIZE);
+        long cellZ = (long) Math.floor((location.getZ() - originZ) / VISITOR_GRID_SIZE);
+
+        return new Location(
+                world,
+                originX + cellX * VISITOR_GRID_SIZE + VISITOR_RADIUS,
+                location.getY(),
+                originZ + cellZ * VISITOR_GRID_SIZE + VISITOR_RADIUS);
     }
 
     private boolean isDangerous(Location location) {
@@ -206,7 +240,6 @@ public final class VisitorMode extends JavaPlugin {
         return command;
     }
 
-    VisitorRegistry getRegistry() { return registry; }
     PluginConfig getPluginConfig() { return pluginConfig; }
     AuthManager getAuth() { return auth; }
     Set<UUID> getAuthenticated() { return authenticated; }
