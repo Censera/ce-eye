@@ -1,6 +1,6 @@
-# Ce’s Eye
+# eyec
 
-Ce’s Eye is a Paper plugin for offline-mode servers that separates player authentication from player trust.
+eyec is a Paper plugin for offline-mode servers that separates player authentication from player trust.
 
 ## Build
 
@@ -87,4 +87,4 @@ Ce’s Eye does not hook the packet internals of Geyser, Floodgate, ViaVersion, 
 
 ## License
 
-MIT
+Apache-2.0
