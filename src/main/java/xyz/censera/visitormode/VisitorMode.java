@@ -18,6 +18,7 @@ public final class VisitorMode extends JavaPlugin {
     private static final double VISITOR_RADIUS = VISITOR_GRID_SIZE / 2.0;
     private static final double VISITOR_RADIUS_SQUARED = VISITOR_RADIUS * VISITOR_RADIUS;
 
+    private VisitorRegistry registry;
     private PluginConfig pluginConfig;
     private UpgradeTask upgradeTask;
     private AuthManager auth;
@@ -29,6 +30,7 @@ public final class VisitorMode extends JavaPlugin {
         saveDefaultConfig();
         pluginConfig = new PluginConfig(this);
 
+        registry = new VisitorRegistry();
         auth = new AuthManager(this);
         twoFactorSetupServer = new TwoFactorSetupServer(this);
 
@@ -70,6 +72,7 @@ public final class VisitorMode extends JavaPlugin {
     void enterVisitor(Player player) {
         if (player.hasPermission("eyec.bypass") || player.isOp()) return;
 
+        registry.add(player.getUniqueId());
         applyVisitorBoundary(player);
         player.setGameMode(GameMode.ADVENTURE);
         player.setFoodLevel(20);
@@ -82,6 +85,7 @@ public final class VisitorMode extends JavaPlugin {
         UUID uuid = player.getUniqueId();
         auth.cancelTotp(uuid);
         twoFactorSetupServer.stopFor(uuid);
+        registry.remove(uuid);
         clearVisitorBoundary(player);
         player.setGameMode(pluginConfig.getUpgradeGameMode());
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', pluginConfig.getUpgradeMessage()));
@@ -240,6 +244,7 @@ public final class VisitorMode extends JavaPlugin {
         return command;
     }
 
+    VisitorRegistry getRegistry() { return registry; }
     PluginConfig getPluginConfig() { return pluginConfig; }
     AuthManager getAuth() { return auth; }
     Set<UUID> getAuthenticated() { return authenticated; }
