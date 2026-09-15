@@ -38,8 +38,8 @@ public final class VisitorMode extends JavaPlugin {
         upgradeTask.start();
 
         VisitorModeCommand executor = new VisitorModeCommand(this);
-        requireCommand("eyes").setExecutor(executor);
-        requireCommand("eyes").setTabCompleter(executor);
+        requireCommand("eyec").setExecutor(executor);
+        requireCommand("eyec").setTabCompleter(executor);
 
         AuthCommand authCommand = new AuthCommand(this);
         requireCommand("register").setExecutor(authCommand);
@@ -49,7 +49,7 @@ public final class VisitorMode extends JavaPlugin {
         VisitorCommand visitorCommand = new VisitorCommand(this);
         requireCommand("guest").setExecutor(visitorCommand);
 
-        getLogger().info("Eyes enabled.");
+        getLogger().info("Censera's Eye enabled.");
     }
 
     @Override
@@ -63,7 +63,7 @@ public final class VisitorMode extends JavaPlugin {
             twoFactorSetupServer = null;
         }
         authenticated.clear();
-        getLogger().info("Eyes disabled.");
+        getLogger().info("Censera's Eye disabled.");
     }
 
     void enterVisitor(Player player) {
