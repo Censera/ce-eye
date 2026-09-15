@@ -30,7 +30,6 @@ public final class VisitorMode extends JavaPlugin {
         auth = new AuthManager(this);
         twoFactorSetupServer = new TwoFactorSetupServer(this);
 
-        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getServer().getPluginManager().registerEvents(new AuthListener(this), this);
         getServer().getPluginManager().registerEvents(new VisitorProtectionListener(this), this);
 
