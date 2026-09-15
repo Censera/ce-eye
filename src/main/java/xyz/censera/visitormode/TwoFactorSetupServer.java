@@ -112,9 +112,9 @@ final class TwoFactorSetupServer {
         String qr = qrSvg(setup.uri);
         String name = escape(setup.name);
         String secret = escape(setup.secret);
-        return "<!doctype html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Eyes 2FA</title>"
+        return "<!doctype html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Censera's Eye 2FA</title>"
                 + "<style>body{font-family:system-ui,sans-serif;max-width:520px;margin:40px auto;padding:24px;color:#222}svg{display:block;width:340px;height:340px;margin:24px auto;background:#fff}code{user-select:all;word-break:break-all}button{padding:10px 14px;cursor:pointer}</style></head><body>"
-                + "<h1>Eyes 2FA</h1><p>Account: <strong>" + name + "</strong></p>"
+                + "<h1>Censera's Eye 2FA</h1><p>Account: <strong>" + name + "</strong></p>"
                 + "<p>Scan this QR code with your authenticator app.</p>" + qr
                 + "<p>Setup key:</p><p><code id=\"secret\">" + secret + "</code></p>"
                 + "<button onclick=\"navigator.clipboard.writeText(document.getElementById('secret').textContent)\">Copy setup key</button>"
