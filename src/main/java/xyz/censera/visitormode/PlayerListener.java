@@ -15,7 +15,7 @@ final class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onJoin(org.bukkit.event.player.PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        if (!player.hasPermission("eyes.bypass")) {
+        if (!player.hasPermission("eyec.bypass")) {
             plugin.enterVisitor(player);
         }
     }
