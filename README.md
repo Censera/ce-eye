@@ -1,6 +1,6 @@
 # eyec
 
-eyec is a Paper plugin for offline-mode servers that separates player authentication from player trust.
+Censera's Eye is a Paper plugin for offline-mode servers that separates player authentication from player trust.
 
 ## Build
 
@@ -11,7 +11,7 @@ mvn package -DskipTests
 
 Requires Java 25 and Maven 3.8 or newer.
 
-The build produces `Eyes-*.jar`. Copy it to the server's `plugins/` directory.
+The build produces `eyec-*.jar`. Copy it to the server's `plugins/` directory.
 
 ## Authentication
 
@@ -25,7 +25,7 @@ Offline-mode players authenticate with:
 /2fa disable <code>
 ```
 
-Ce’s Eye stores accounts in `plugins/Eyes/accounts.yml`.
+Censera's Eye stores accounts in `plugins/eyec/accounts.yml`.
 
 Passwords use salted PBKDF2-HMAC-SHA256. 2FA uses TOTP.
 
@@ -54,22 +54,22 @@ A whitelisted offline-mode player still has to authenticate.
 
 | Command | Purpose |
 |---|---|
-| `/eyes reload` | Reload Ce’s Eye configuration |
-| `/eyes list` | List relevant player state |
-| `/eyes kick-visitors` | Kick players currently in Visitor Mode |
+| `/eyec reload` | Reload Censera's Eye configuration |
+| `/eyec list` | List relevant player state |
+| `/eyec kick-visitors` | Kick players currently in Visitor Mode |
 | `/guest unstuck` | Move a visitor out of an invalid position |
 | `/guest nudge` | Move a visitor back toward the visitor area |
 | `/register <password>` | Create an offline-mode account |
 | `/login <password> [2fa-code]` | Authenticate an account |
 | `/2fa <enable\|confirm\|disable> [code]` | Manage TOTP authentication |
 
-The `eyes.admin` permission grants administrative commands.
+The `eyec.admin` permission grants administrative commands.
 
-The `eyes.bypass` permission bypasses authentication and Visitor Mode restrictions.
+The `eyec.bypass` permission bypasses authentication and Visitor Mode restrictions.
 
 ## Integrations
 
-Ce’s Eye supports the following optional integrations:
+Censera's Eye supports the following optional integrations:
 
 - `FastLogin`
 - `Floodgate`
@@ -77,7 +77,7 @@ Ce’s Eye supports the following optional integrations:
 - `ViaVersion`
 - `ViaBackwards`
 
-Ce’s Eye does not hook the packet internals of Geyser, Floodgate, ViaVersion, or ViaBackwards.
+Censera's Eye does not hook the packet internals of Geyser, Floodgate, ViaVersion, or ViaBackwards.
 
 ## Requirements
 
