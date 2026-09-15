@@ -26,7 +26,7 @@ final class VisitorModeCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("eyec.admin")) {
-            sender.sendMessage(ChatColor.RED + "You don't have permission to use this command.");
+            sender.sendMessage(ChatColor.RED + "You don't have permission to use this command");
             return true;
         }
 
@@ -47,14 +47,14 @@ final class VisitorModeCommand implements CommandExecutor, TabCompleter {
     private void handleReload(CommandSender sender) {
         plugin.reload();
         sender.sendMessage(ChatColor.GREEN + "Censera's Eye config reloaded.");
-        plugin.getLogger().info(sender.getName() + " reloaded Censera's Eye config.");
+        plugin.getLogger().info(sender.getName() + " reloaded Censera's Eye config");
     }
 
     private void handleList(CommandSender sender) {
         Set<UUID> visitors = plugin.getRegistry().snapshot();
 
         if (visitors.isEmpty()) {
-            sender.sendMessage(ChatColor.YELLOW + "No visitors are currently online.");
+            sender.sendMessage(ChatColor.YELLOW + "No visitors are currently online");
             return;
         }
 
@@ -72,7 +72,7 @@ final class VisitorModeCommand implements CommandExecutor, TabCompleter {
         Set<UUID> visitors = plugin.getRegistry().snapshot();
 
         if (visitors.isEmpty()) {
-            sender.sendMessage(ChatColor.YELLOW + "No visitors to kick.");
+            sender.sendMessage(ChatColor.YELLOW + "No visitors to kick");
             return;
         }
 
@@ -80,14 +80,14 @@ final class VisitorModeCommand implements CommandExecutor, TabCompleter {
         for (UUID uuid : visitors) {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null && player.isOnline()) {
-                player.kickPlayer(ChatColor.RED + "You have been removed from the server.");
+                player.kickPlayer(ChatColor.RED + "You have been removed from the server");
                 kicked++;
             }
             plugin.getRegistry().remove(uuid);
         }
 
-        sender.sendMessage(ChatColor.GREEN + "Kicked " + kicked + " visitor(s).");
-        plugin.getLogger().info(sender.getName() + " kicked " + kicked + " visitor(s).");
+        sender.sendMessage(ChatColor.GREEN + "Kicked " + kicked + " visitor(s)");
+        plugin.getLogger().info(sender.getName() + " kicked " + kicked + " visitor(s)");
     }
 
     @Override
@@ -108,15 +108,15 @@ final class VisitorModeCommand implements CommandExecutor, TabCompleter {
 
     private void sendUsage(CommandSender sender) {
         sender.sendMessage(ChatColor.GOLD + "Censera's Eye administration:");
-        sender.sendMessage(ChatColor.YELLOW + "  /eyec reload" + ChatColor.GRAY + " - reload configuration");
-        sender.sendMessage(ChatColor.YELLOW + "  /eyec list" + ChatColor.GRAY + " - list online visitors");
-        sender.sendMessage(ChatColor.YELLOW + "  /eyec kick-visitors" + ChatColor.GRAY + " - kick all online visitors");
+        sender.sendMessage(ChatColor.YELLOW + "  /eyec reload" + ChatColor.GRAY + " to reload configuration");
+        sender.sendMessage(ChatColor.YELLOW + "  /eyec list" + ChatColor.GRAY + " to list online visitors");
+        sender.sendMessage(ChatColor.YELLOW + "  /eyec kick-visitors" + ChatColor.GRAY + " to kick all online visitors");
         sender.sendMessage(ChatColor.GOLD + "Visitor utilities:");
-        sender.sendMessage(ChatColor.YELLOW + "  /guest unstuck" + ChatColor.GRAY + " - teleport to bed spawn or world spawn");
-        sender.sendMessage(ChatColor.YELLOW + "  /guest nudge" + ChatColor.GRAY + " - teleport 10 blocks upward (30s cooldown)");
+        sender.sendMessage(ChatColor.YELLOW + "  /guest unstuck" + ChatColor.GRAY + " is teleport to bed spawn or world spawn");
+        sender.sendMessage(ChatColor.YELLOW + "  /guest nudge" + ChatColor.GRAY + " is teleport 10 blocks upward (30s cooldown)");
         sender.sendMessage(ChatColor.GOLD + "Authentication:");
-        sender.sendMessage(ChatColor.YELLOW + "  /register <password>" + ChatColor.GRAY + " - register an offline account");
-        sender.sendMessage(ChatColor.YELLOW + "  /login <password> [2fa-code]" + ChatColor.GRAY + " - log in");
-        sender.sendMessage(ChatColor.YELLOW + "  /2fa <enable|confirm|disable> [code]" + ChatColor.GRAY + " - manage 2FA");
+        sender.sendMessage(ChatColor.YELLOW + "  /register <password>" + ChatColor.GRAY + " to register an offline account");
+        sender.sendMessage(ChatColor.YELLOW + "  /login <password> [2fa-code]" + ChatColor.GRAY + " to log in");
+        sender.sendMessage(ChatColor.YELLOW + "  /2fa <enable|confirm|disable> [code]" + ChatColor.GRAY + " to manage 2FA");
     }
 }

@@ -23,7 +23,7 @@ final class AuthCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("Players only.");
+            sender.sendMessage("Players only");
             return true;
         }
 
@@ -41,7 +41,7 @@ final class AuthCommand implements CommandExecutor {
             return true;
         }
         if (args[0].length() < 8) {
-            player.sendMessage(ChatColor.RED + "Password must be at least 8 characters.");
+            player.sendMessage(ChatColor.RED + "Password must be at least 8 characters");
             return true;
         }
         plugin.getAuth().register(player, args[0], result -> {
@@ -49,14 +49,15 @@ final class AuthCommand implements CommandExecutor {
                 case "ok" -> {
                     plugin.tryUpgrade(player);
                     if (plugin.getRegistry().contains(player.getUniqueId())) {
-                        player.sendMessage(ChatColor.GREEN + "Registered and logged in. You are not whitelisted, so Visitor Mode remains active.");
+                        player.sendMessage(ChatColor.GREEN + "Registered and logged in!");
+                        player.sendMessage(ChatColor.GOLD + "You are not whitelisted, so Visitor Mode remains active");
                     } else {
-                        player.sendMessage(ChatColor.GREEN + "Registered and logged in. Full access granted.");
+                        player.sendMessage(ChatColor.GREEN + "Registered and logged in. Enjoy!");
                     }
                 }
-                case "already-registered" -> player.sendMessage(ChatColor.RED + "You are already registered.");
-                case "rate-limited" -> player.sendMessage(ChatColor.RED + "Please wait before trying again.");
-                default -> player.sendMessage(ChatColor.RED + "Registration failed.");
+                case "already-registered" -> player.sendMessage(ChatColor.RED + "You are already registered");
+                case "rate-limited" -> player.sendMessage(ChatColor.RED + "Please wait before trying again");
+                default -> player.sendMessage(ChatColor.RED + "Registration failed");
             }
         });
         return true;
@@ -64,27 +65,28 @@ final class AuthCommand implements CommandExecutor {
 
     private boolean login(Player player, String[] args) {
         if (args.length < 1 || args.length > 2) {
-            player.sendMessage(ChatColor.YELLOW + "Usage: /login <password> [2FA code]");
+            player.sendMessage(ChatColor.YELLOW + "Usage: /login <password> [Optional 2FA code]");
             return true;
         }
         plugin.getAuth().login(player, args[0], args.length == 2 ? args[1] : null, result -> {
             if (result.startsWith("rate-limited:")) {
-                player.sendMessage(ChatColor.RED + "Please wait " + result.substring("rate-limited:".length()) + " seconds before trying again.");
+                player.sendMessage(ChatColor.RED + "Please wait " + result.substring("rate-limited:".length()) + " seconds before trying again");
                 return;
             }
             switch (result) {
                 case "ok" -> {
                     plugin.tryUpgrade(player);
                     if (plugin.getRegistry().contains(player.getUniqueId())) {
-                        player.sendMessage(ChatColor.GREEN + "Logged in. You are not whitelisted, so Visitor Mode remains active.");
+                        player.sendMessage(ChatColor.GREEN + "Logged in!");
+                        player.sendMessage(ChatColor.GOLD + "You are not whitelisted, so Visitor Mode remains active");
                     } else {
-                        player.sendMessage(ChatColor.GREEN + "Logged in. Full access granted.");
+                        player.sendMessage(ChatColor.GREEN + "Logged in");
                     }
                 }
-                case "not-registered" -> player.sendMessage(ChatColor.RED + "You are not registered. Use /register <password>.");
-                case "2fa-required" -> player.sendMessage(ChatColor.RED + "Your account requires a 2FA code.");
-                case "invalid-2fa" -> player.sendMessage(ChatColor.RED + "Invalid 2FA code.");
-                default -> player.sendMessage(ChatColor.RED + "Invalid password.");
+                case "not-registered" -> player.sendMessage(ChatColor.RED + "You are not registered. Use /register <password>");
+                case "2fa-required" -> player.sendMessage(ChatColor.RED + "Your account requires a 2FA code");
+                case "invalid-2fa" -> player.sendMessage(ChatColor.RED + "Invalid 2FA code");
+                default -> player.sendMessage(ChatColor.RED + "Invalid password, try again");
             }
         });
         return true;
@@ -92,13 +94,13 @@ final class AuthCommand implements CommandExecutor {
 
     private boolean twoFactor(Player player, String[] args) {
         if (!plugin.getAuth().isAuthenticated(player.getUniqueId())) {
-            player.sendMessage(ChatColor.RED + "You must be logged in.");
+            player.sendMessage(ChatColor.RED + "You must be logged in");
             return true;
         }
         if (args.length == 1 && args[0].equalsIgnoreCase("enable")) {
             String secret = plugin.getAuth().beginTotp(player);
             if (secret == null) {
-                player.sendMessage(ChatColor.RED + "2FA is already enabled or setup is already in progress.");
+                player.sendMessage(ChatColor.RED + "2FA is already enabled or setup is already in progress");
                 return true;
             }
 
@@ -107,7 +109,7 @@ final class AuthCommand implements CommandExecutor {
                 url = plugin.startTwoFactorSetup(player, secret);
             } catch (IOException e) {
                 plugin.getAuth().cancelTotp(player.getUniqueId());
-                player.sendMessage(ChatColor.RED + "Could not start the 2FA setup page.");
+                player.sendMessage(ChatColor.RED + "Could not start the 2FA setup page");
                 plugin.getLogger().warning("Could not start 2FA setup page for " + player.getUniqueId() + ": " + e.getMessage());
                 return true;
             }
@@ -122,22 +124,22 @@ final class AuthCommand implements CommandExecutor {
                     .hoverEvent(HoverEvent.showText(Component.text("Copy the setup key")));
 
             player.sendMessage(Component.text().append(open).append(Component.text("  ")).append(copy).build());
-            player.sendMessage(ChatColor.YELLOW + "Add the account with your authenticator, then use /2fa confirm <code>.");
+            player.sendMessage(ChatColor.YELLOW + "Add the account with your authenticator, then use /2fa confirm <code>");
             return true;
         }
         if (args.length == 2 && args[0].equalsIgnoreCase("confirm")) {
             if (plugin.getAuth().confirmTotp(player, args[1])) {
-                player.sendMessage(ChatColor.GREEN + "2FA enabled.");
+                player.sendMessage(ChatColor.GREEN + "2FA enabled");
             } else {
-                player.sendMessage(ChatColor.RED + "Invalid 2FA code.");
+                player.sendMessage(ChatColor.RED + "Invalid 2FA code");
             }
             return true;
         }
         if (args.length == 2 && args[0].equalsIgnoreCase("disable")) {
             if (plugin.getAuth().disableTotp(player, args[1])) {
-                player.sendMessage(ChatColor.GREEN + "2FA disabled.");
+                player.sendMessage(ChatColor.GREEN + "2FA disabled");
             } else {
-                player.sendMessage(ChatColor.RED + "Invalid 2FA code.");
+                player.sendMessage(ChatColor.RED + "Invalid 2FA code");
             }
             return true;
         }

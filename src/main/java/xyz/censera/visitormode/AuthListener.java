@@ -30,7 +30,7 @@ final class AuthListener implements Listener {
         }
 
         plugin.enterVisitor(player);
-        player.sendMessage(ChatColor.YELLOW + "Please log in with /login <password> or register with /register <password>.");
+        player.sendMessage(ChatColor.YELLOW + "Please log in with /login <password> or register with /register <password>");
 
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             if (!player.isOnline() || plugin.getAuthenticated().contains(uuid)) {
@@ -39,9 +39,9 @@ final class AuthListener implements Listener {
 
             if (plugin.isPremiumPlayer(uuid)) {
                 plugin.getAuthenticated().add(uuid);
-                player.sendMessage(ChatColor.GREEN + "Premium account authenticated.");
+                player.sendMessage(ChatColor.GREEN + "Premium account authenticated");
             } else if (plugin.getAuth().isRegistered(uuid)) {
-                player.sendMessage(ChatColor.YELLOW + "Please log in with /login <password> [2fa-code].");
+                player.sendMessage(ChatColor.YELLOW + "Please log in with /login <password> [2fa-code]");
             }
         }, 20L);
     }

@@ -56,7 +56,7 @@ final class AuthManager {
         try {
             plugin.getDataFolder().mkdirs();
             Files.copy(oldFile.toPath(), file.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
-            plugin.getLogger().info("Migrated accounts.yml from the previous GuestMode data folder.");
+            plugin.getLogger().info("Migrated accounts.yml from the previous GuestMode data folder");
         } catch (IOException e) {
             plugin.getLogger().severe("Could not migrate GuestMode accounts.yml: " + e.getMessage());
         }
