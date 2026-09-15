@@ -341,8 +341,8 @@ final class AuthManager {
     }
 
     String totpUri(Player player, String secret) {
-        return "otpauth://totp/Eyes:" + player.getName()
-                + "?secret=" + secret + "&issuer=Eyes&algorithm=SHA1&digits=6&period=30";
+        return "otpauth://totp/Censera's%20Eye:" + player.getName()
+                + "?secret=" + secret + "&issuer=Censera%27s%20Eye&algorithm=SHA1&digits=6&period=30";
     }
 
     private static final class Account {
